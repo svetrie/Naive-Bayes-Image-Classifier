@@ -13,15 +13,22 @@ using namespace std;
 
 int main() {
     ImageData imageData;
+
     imageData.loadImages(imageData.getTrainingImages());
     imageData.loadLabels(imageData.getTrainingImages());
+    imageData.loadImages(imageData.getTestImages());
+    imageData.loadLabels(imageData.getTestImages());
+
     imageData.findProbabilities();
+    imageData.findPriors();
+
+    //imageData.getLogPriors();
 
     if ((*imageData.getTrainingImages())[0].getImage().size() == 28) {
         cout << "load images working correctly" << endl;
     }
 
-    if ((*(*imageData.getTrainingImages())[2].getImageLabel()) == 4) {
+    if ((*imageData.getTrainingImages())[2].getImageLabel() == 4) {
         cout << "load labels working correctly" << endl;
     }
 

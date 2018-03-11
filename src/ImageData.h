@@ -14,7 +14,7 @@
 class ImageData {
 private:
     vector<Image> training_images;
-    vector<Image> testing_images;
+    vector<Image> test_images;
     //std::vector<std::vector<std::vector<int> > > vec3D(9, std::vector<std::vector<int> > (9, std::vector<int>(9,0)));
     vector<vector<vector<double>>> probabilities;
     vector<double> priors;
@@ -22,17 +22,30 @@ private:
 public:
     ImageData();
     //vector<Image> training_images;
-    //vector<Image> testing_images;
+    //vector<Image> test_images;
     static constexpr double LAPLACE_VALUE = 6.0;
+    static constexpr int NUM_CLASSES = 10;
+
     vector<double>* getPriors();
-    void setPriors();
+    void findPriors();
+    vector<double> getLogPriors();
+
     vector<Image>* getTrainingImages();
-    vector<Image>* getTestingImages();
+    vector<Image>* getTestImages();
+
     void loadImages(vector<Image>* images);
     void loadLabels(vector<Image>* images);
+
     int getClassFrequency(int class_num);
     int getFeaturesSum(int class_num, int row, int col);
     void findProbabilities();
+
+    void classifyImages();
+    double getAccuracyRate();
+    int getMostProbableClass(vector<double> class_probabilities);
+
     void saveToFile(string file_name);
     void loadFromFile(string file_name);
+
+
 };

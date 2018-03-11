@@ -9,11 +9,13 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <complex>
+#include <math.h>
 
 
 ImageData::ImageData() {
-    probabilities = vector<vector<vector<double>>>(28, vector<vector<double>>(28, vector<double>(10, 0)));
-    priors = vector<double>(10);
+    probabilities = vector<vector<vector<double>>>(Image::IMAGE_SIZE, vector<vector<double>>(Image::IMAGE_SIZE, vector<double>(NUM_CLASSES, 0)));
+    priors = vector<double>(NUM_CLASSES);
 }
 
 // Returning a reference for now
@@ -23,9 +25,9 @@ vector<Image>* ImageData::getTrainingImages() {
     return training_images_ptr;
 }
 
-vector<Image>* ImageData::getTestingImages() {
+vector<Image>* ImageData::getTestImages() {
     //return  vector<Image>();
-    vector<Image>* testing_images_ptr = &testing_images;
+    vector<Image>* testing_images_ptr = &test_images;
     return testing_images_ptr;
 }
 
@@ -76,6 +78,7 @@ void ImageData::loadImages(vector<Image>* images) {
         cout << endl;
     }
 */
+    inFile.close();
 }
 
 void ImageData::loadLabels(vector<Image>* images) {
@@ -94,8 +97,11 @@ void ImageData::loadLabels(vector<Image>* images) {
         int label_num = 0;
         strstream >> label_num;
 
-        (*(*images)[i++].getImageLabel()) = label_num;
+        //(*(*images)[i++].getImageLabel()) = label_num;
+        (*images)[i++].setImageLabel(label_num);
     }
+
+    inFile.close();
 }
 
 void ImageData::loadFromFile(string file_name) {
@@ -111,7 +117,7 @@ int ImageData::getClassFrequency(int class_num) {
     int class_frequency = 0;
 
     for (Image image : training_images) {
-        if ((*image.getImageLabel()) == class_num) {
+        if (image.getImageLabel() == class_num) {
             class_frequency += 1;
         }
     }
@@ -123,7 +129,7 @@ int ImageData::getFeaturesSum(int class_num, int row, int col) {
     int feature_sum = 0;
 
     for (Image image : training_images) {
-        if ((*image.getImageLabel()) == class_num && image.getImage()[row][col] == true) {
+        if (image.getImageLabel() == class_num && image.getImage()[row][col] == true) {
             feature_sum += 1;
         }
     }
@@ -157,7 +163,7 @@ void ImageData::findProbabilities() {
     }
 }
 
-void ImageData::setPriors() {
+void ImageData::findPriors() {
     for (int i = 0; i < priors.size(); ++i) {
         priors[i] = getClassFrequency(i) / training_images.size();
     }
@@ -166,4 +172,60 @@ void ImageData::setPriors() {
 vector<double>* ImageData::getPriors() {
     vector<double>* priors_ptr = &priors;
     return priors_ptr;
+}
+
+vector<double> ImageData::getLogPriors() {
+    vector<double> log_priors(NUM_CLASSES);
+
+    for (double class_probability : priors) {
+        log(class_probability);
+    }
+
+    return log_priors;
+}
+
+int ImageData::getMostProbableClass(vector<double> class_probabilities) {
+    int class_num = 0;
+
+    for (int i = 1; i < NUM_CLASSES; i++) {
+        if (class_probabilities[i] > class_probabilities[class_num]) {
+            class_num = i;
+        }
+    }
+
+    return class_num;
+}
+
+void ImageData::classifyImages() {
+    vector<double> class_probabilities;
+    vector<double> initial_probabilities = getLogPriors();
+    class_probabilities = initial_probabilities;
+
+    for (Image image : test_images) {
+        for (int i = 0; i < NUM_CLASSES; ++i) {
+            for (int j = 0; j < image.getImage().size(); ++j) {
+                for (int k = 0; k < image.getImage()[0].size(); ++k) {
+                    class_probabilities += log(probabilities[i][j][k]);
+                }
+            }
+        }
+
+        image.setPredictedLabel(getMostProbableClass(class_probabilities));
+        class_probabilities = initial_probabilities;
+    }
+}
+
+double ImageData::getAccuracyRate() {
+    int num_images = 0;
+    int num_correct_predictions = 0;
+
+    for (Image image : test_images) {
+        num_images++;
+
+        if (image.getPredictedLabel() == image.getImageLabel()) {
+            num_correct_predictions++;
+        }
+    }
+
+    return ((double)(num_correct_predictions) / num_images);
 }

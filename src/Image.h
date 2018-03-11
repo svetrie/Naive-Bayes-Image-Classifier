@@ -14,10 +14,20 @@ private:
     //static const int IMAGE_SIZE = 28;
     vector<vector<bool>> image_pixels;
     int image_label;
+    int predicted_label;
 public:
     Image(vector<vector<bool>>);
 
     static const int IMAGE_SIZE = 28;
     vector<vector<bool>> getImage();
-    int* getImageLabel();
+
+    int getImageLabel();
+    void setImageLabel(int class_label);
+
+    int getPredictedLabel();
+    void setPredictedLabel(int class_label);
+
+
+    //int* getImageLabel();
+    //int* getPredictedLabel();
 };
