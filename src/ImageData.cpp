@@ -11,6 +11,10 @@
 #include <sstream>
 
 
+ImageData::ImageData() {
+    probabilities = vector<vector<vector<double>>>(28, vector<vector<double>>(28, vector<double>(10, 0)));
+}
+
 // Returning a reference for now
 vector<Image>* ImageData::getTrainingImages() {
     //return training_images;
@@ -73,15 +77,6 @@ void ImageData::loadImages(vector<Image>* images) {
 */
 }
 
-void loadFromFile(string file_name) {
-
-}
-
-void saveToFile(string file_name) {
-    ofstream newFile;
-    newFile.open(file_name);
-}
-
 void ImageData::loadLabels(vector<Image>* images) {
     ifstream inFile;
     inFile.open("../data/traininglabels");
@@ -101,3 +96,51 @@ void ImageData::loadLabels(vector<Image>* images) {
         (*(*images)[i++].getImageLabel()) = label_num;
     }
 }
+
+void ImageData::loadFromFile(string file_name) {
+
+}
+
+void ImageData::saveToFile(string file_name) {
+    ofstream newFile;
+    newFile.open(file_name);
+}
+
+int ImageData::getClassFrequency(int class_num) {
+    int class_frequency = 0;
+
+    for (Image image : training_images) {
+        if ((*image.getImageLabel()) == class_num) {
+            class_frequency += 1;
+        }
+    }
+
+    return class_frequency;
+}
+
+int ImageData::getFeaturesSum(int class_num, int row, int col) {
+    int feature_sum = 0;
+
+    for (Image image : training_images) {
+        if ((*image.getImageLabel()) == class_num && image.getImage()[row][col] == true) {
+            feature_sum += 1;
+        }
+    }
+
+    return feature_sum;
+}
+
+void ImageData::findProbabilities() {
+    for (int i = 0; i < probabilities.size(); i++) {
+        for (int j = 0; j < probabilities[0].size(); j++) {
+            for (int k = 0; k < probabilities[0][0].size(); k++) {
+                probabilities[i][j][k] = (LAPLACE_VALUE + getFeaturesSum(i, j, k)
+                                                          / (2 * LAPLACE_VALUE + getClassFrequency(i)));
+            }
+        }
+    }
+}
+
+
+
+

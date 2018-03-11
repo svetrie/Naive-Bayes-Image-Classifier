@@ -12,9 +12,10 @@
 using namespace std;
 
 int main() {
-    ImageData imageData;
+    ImageData imageData();
     imageData.loadImages(imageData.getTrainingImages());
     imageData.loadLabels(imageData.getTrainingImages());
+    imageData.findProbabilities();
 
     if ((*imageData.getTrainingImages())[0].getImage().size() == 28) {
         cout << "load images working correctly" << endl;
