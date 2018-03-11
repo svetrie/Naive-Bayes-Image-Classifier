@@ -3,5 +3,5 @@ project(naivebayes)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(naivebayes)
-add_executable(unit-tests)
+add_executable(naivebayes src/Image.cpp src/Image.h src/ImageData.cpp src/ImageData.h src/main.cpp)
+#add_executable(unit-tests)
