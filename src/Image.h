@@ -19,5 +19,5 @@ public:
 
     static const int IMAGE_SIZE = 28;
     vector<vector<bool>> getImage();
-    int getImageLabel();
+    int* getImageLabel();
 };

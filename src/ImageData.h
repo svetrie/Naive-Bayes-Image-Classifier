@@ -13,15 +13,16 @@
 
 class ImageData {
 private:
-    //vector<Image> training_images;
-    //vector<Image> testing_images;
-
-public:
     vector<Image> training_images;
     vector<Image> testing_images;
-    vector<Image> getTrainingImages();
-    vector<Image> getTestingImages();
-    void loadImages();
+
+public:
+    //vector<Image> training_images;
+    //vector<Image> testing_images;
+    vector<Image>* getTrainingImages();
+    vector<Image>* getTestingImages();
+    void loadImages(vector<Image>* images);
+    void loadLabels(vector<Image>* images);
     void saveToFile(string file_name);
     void loadFromFile(string file_name);
 };
