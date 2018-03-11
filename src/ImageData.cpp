@@ -13,6 +13,7 @@
 
 ImageData::ImageData() {
     probabilities = vector<vector<vector<double>>>(28, vector<vector<double>>(28, vector<double>(10, 0)));
+    priors = vector<double>(10);
 }
 
 // Returning a reference for now
@@ -131,16 +132,38 @@ int ImageData::getFeaturesSum(int class_num, int row, int col) {
 }
 
 void ImageData::findProbabilities() {
+    cout << "Working before loop" << endl;
+
     for (int i = 0; i < probabilities.size(); i++) {
+
+        int class_frequency = getClassFrequency(i);
+
+        cout << "Working after 1st loop" << endl;
+
         for (int j = 0; j < probabilities[0].size(); j++) {
+
+            cout << "Working after 2nd loop" << endl;
+
             for (int k = 0; k < probabilities[0][0].size(); k++) {
+
+                cout << "Working after 3rd loop" << endl;
+
                 probabilities[i][j][k] = (LAPLACE_VALUE + getFeaturesSum(i, j, k)
-                                                          / (2 * LAPLACE_VALUE + getClassFrequency(i)));
+                                                          / (2 * LAPLACE_VALUE + class_frequency));
+
+                cout << "working after calculations" << endl;
             }
         }
     }
 }
 
+void ImageData::setPriors() {
+    for (int i = 0; i < priors.size(); ++i) {
+        priors[i] = getClassFrequency(i) / training_images.size();
+    }
+}
 
-
-
+vector<double>* ImageData::getPriors() {
+    vector<double>* priors_ptr = &priors;
+    return priors_ptr;
+}
