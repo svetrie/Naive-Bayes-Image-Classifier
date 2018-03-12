@@ -32,11 +32,11 @@ int main() {
 
     imageData.loadImages("../data/sample_test_images", imageData.getTestImages());
 
-    //cout << "loads test images" << endl;
+    cout << "loads test images" << endl;
 
     imageData.loadLabels("../data/sample_test_labels", imageData.getTestImages());
 
-    //cout << "loads test labels" << endl;
+    cout << "loads test labels" << endl;
 
     imageData.findProbabilities();
 
@@ -44,10 +44,13 @@ int main() {
 
     imageData.findPriors();
 
+    imageData.classifyImages();
+
+    cout << imageData.getAccuracyRate() << endl;
+
     //cout << "priors working" << endl;
 
     //imageData.getLogPriors();
-
 
     return 0;
 }

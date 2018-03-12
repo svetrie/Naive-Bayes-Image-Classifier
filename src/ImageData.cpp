@@ -41,16 +41,24 @@ void ImageData::loadImages(const char* file_name, vector<Image>* images) {
     }
 
     vector<vector<bool>> trainingImage;
+    //vector<vector<bool>> trainingImage (28, vector<bool>(28, false));
     //vector<vector<vector<bool>>> trainingImages;
     string line;
 
     //int i;
     for(int i = 0; getline(inFile, line); i = (i + 1) % 28) {
-        vector<bool> row;
+        //vector<bool> row;
+        vector<bool> row(28, false);
 
+        for (int j = 0; j < line.size(); ++j) {
+            row[j] = (line[j] != ' ');
+        }
+
+
+        /*
         for (char c : line) {
             row.push_back(c != ' ');
-        }
+        }*/
 
         trainingImage.push_back(row);
 
@@ -118,11 +126,21 @@ void ImageData::saveModel(const char* file_name) {
 int ImageData::getClassFrequency(int class_num) {
     int class_frequency = 0;
 
+    //cout << "err" << endl;
+
+
     for (Image image : training_images) {
         if (image.getImageLabel() == class_num) {
             class_frequency += 1;
         }
     }
+
+    /*
+    for (int i = 0; i < training_images.size(); ++i) {
+        if (training_images[i].getImageLabel() == class_num) {
+            class_frequency++;
+        }
+    }*/
 
     return class_frequency;
 }
@@ -130,7 +148,13 @@ int ImageData::getClassFrequency(int class_num) {
 int ImageData::getFeaturesSum(int class_num, int row, int col) {
     int feature_sum = 0;
 
+    //cout << "possible err" << endl;
+
     for (Image image : training_images) {
+
+        //cout << "passed for each loop" << endl;
+        //cout << image.getImageLabel() << endl;
+
         if (image.getImageLabel() == class_num && image.getImage()[row][col] == true) {
             feature_sum += 1;
         }
@@ -143,6 +167,8 @@ void ImageData::findProbabilities() {
     cout << "Working before loop" << endl;
 
     for (int i = 0; i < probabilities.size(); i++) {
+
+        cout << "Class freq" << endl;
 
         int class_frequency = getClassFrequency(i);
 
