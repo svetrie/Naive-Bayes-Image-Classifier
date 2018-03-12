@@ -31,9 +31,10 @@ vector<Image>* ImageData::getTestImages() {
     return testing_images_ptr;
 }
 
-void ImageData::loadImages(vector<Image>* images) {
+void ImageData::loadImages(const char* file_name, vector<Image>* images) {
     ifstream inFile;
-    inFile.open("../data/trainingimages");
+    //inFile.open("../data/trainingimages");
+    inFile.open(file_name);
 
     if (!inFile) {
          cout << "Unable to open file datafile.txt" << endl;
@@ -81,9 +82,10 @@ void ImageData::loadImages(vector<Image>* images) {
     inFile.close();
 }
 
-void ImageData::loadLabels(vector<Image>* images) {
+void ImageData::loadLabels(const char* file_name, vector<Image>* images) {
     ifstream inFile;
-    inFile.open("../data/traininglabels");
+    //inFile.open("../data/traininglabels");
+    inFile.open(file_name);
 
     if (!inFile) {
         cout << "Unable to open file datafile.txt" << endl;
@@ -104,13 +106,13 @@ void ImageData::loadLabels(vector<Image>* images) {
     inFile.close();
 }
 
-void ImageData::loadFromFile(string file_name) {
+void ImageData::loadModel(const char* file_name) {
 
 }
 
-void ImageData::saveToFile(string file_name) {
+void ImageData::saveModel(const char* file_name) {
     ofstream newFile;
-    newFile.open(file_name);
+    //newFile.open(file_name);
 }
 
 int ImageData::getClassFrequency(int class_num) {
@@ -205,7 +207,7 @@ void ImageData::classifyImages() {
         for (int i = 0; i < NUM_CLASSES; ++i) {
             for (int j = 0; j < image.getImage().size(); ++j) {
                 for (int k = 0; k < image.getImage()[0].size(); ++k) {
-                    class_probabilities += log(probabilities[i][j][k]);
+                    class_probabilities[i] += log(probabilities[i][j][k]);
                 }
             }
         }

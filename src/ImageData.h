@@ -33,8 +33,8 @@ public:
     vector<Image>* getTrainingImages();
     vector<Image>* getTestImages();
 
-    void loadImages(vector<Image>* images);
-    void loadLabels(vector<Image>* images);
+    void loadImages(const char* file_name, vector<Image>* images);
+    void loadLabels(const char* file_name, vector<Image>* images);
 
     int getClassFrequency(int class_num);
     int getFeaturesSum(int class_num, int row, int col);
@@ -44,8 +44,8 @@ public:
     double getAccuracyRate();
     int getMostProbableClass(vector<double> class_probabilities);
 
-    void saveToFile(string file_name);
-    void loadFromFile(string file_name);
+    void saveModel(const char* file_name);
+    void loadModel(const char* file_name);
 
 
 };
