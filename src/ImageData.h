@@ -18,12 +18,13 @@ private:
     //std::vector<std::vector<std::vector<int> > > vec3D(9, std::vector<std::vector<int> > (9, std::vector<int>(9,0)));
     vector<vector<vector<double>>> probabilities;
     vector<double> priors;
+    vector<int> class_frequencies;
             //(28, vector<vector<double>>(28, vector<double>(10, 0)));
 public:
     ImageData();
     //vector<Image> training_images;
     //vector<Image> test_images;
-    static constexpr double LAPLACE_VALUE = 6.0;
+    static constexpr double LAPLACE_VALUE = 10.0;
     static constexpr int NUM_CLASSES = 10;
 
     vector<double>* getPriors();
@@ -36,7 +37,8 @@ public:
     void loadImages(const char* file_name, vector<Image>* images);
     void loadLabels(const char* file_name, vector<Image>* images);
 
-    int getClassFrequency(int class_num);
+    void findClassFrequencies();
+    //int getClassFrequency(int class_num);
     int getFeaturesSum(int class_num, int row, int col);
     void findProbabilities();
 

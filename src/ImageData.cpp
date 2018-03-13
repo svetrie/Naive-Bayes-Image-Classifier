@@ -14,8 +14,10 @@
 
 
 ImageData::ImageData() {
-    probabilities = vector<vector<vector<double>>>(Image::IMAGE_SIZE, vector<vector<double>>(Image::IMAGE_SIZE, vector<double>(NUM_CLASSES, 0)));
+    probabilities = vector<vector<vector<double>>>(NUM_CLASSES,
+                                                   vector<vector<double>>(Image::IMAGE_SIZE, vector<double>(Image::IMAGE_SIZE, 0)));
     priors = vector<double>(NUM_CLASSES);
+    class_frequencies = vector<int>(NUM_CLASSES);
 }
 
 // Returning a reference for now
@@ -120,19 +122,31 @@ void ImageData::loadModel(const char* file_name) {
 
 void ImageData::saveModel(const char* file_name) {
     ofstream newFile;
-    //newFile.open(file_name);
+    newFile.open(file_name);
+
+    for (vector<vector<double>> class_features : probabilities) {
+        for (vector<double> row_features : class_features) {
+            for (double feature_value : row_features) {
+                newFile << feature_value << endl;
+            }
+        }
+    }
+
+/*
+    for (double class_prior : priors) {
+        new
+    }
+*/
 }
 
-int ImageData::getClassFrequency(int class_num) {
-    int class_frequency = 0;
+void ImageData::findClassFrequencies() {
+    //int class_frequency = 0;
 
     //cout << "err" << endl;
 
 
     for (Image image : training_images) {
-        if (image.getImageLabel() == class_num) {
-            class_frequency += 1;
-        }
+        class_frequencies[image.getImageLabel()]++;
     }
 
     /*
@@ -142,7 +156,7 @@ int ImageData::getClassFrequency(int class_num) {
         }
     }*/
 
-    return class_frequency;
+    //return class_frequency;
 }
 
 int ImageData::getFeaturesSum(int class_num, int row, int col) {
@@ -155,7 +169,7 @@ int ImageData::getFeaturesSum(int class_num, int row, int col) {
         //cout << "passed for each loop" << endl;
         //cout << image.getImageLabel() << endl;
 
-        if (image.getImageLabel() == class_num && image.getImage()[row][col] == true) {
+        if (image.getImageLabel() == class_num && image.getImage()[row][col]) {
             feature_sum += 1;
         }
     }
@@ -164,28 +178,32 @@ int ImageData::getFeaturesSum(int class_num, int row, int col) {
 }
 
 void ImageData::findProbabilities() {
-    cout << "Working before loop" << endl;
+    //cout << "Working before loop" << endl;
+
+    //cout << probabilities.size() << endl;
 
     for (int i = 0; i < probabilities.size(); i++) {
 
-        cout << "Class freq" << endl;
+       // cout << "Class freq" << endl;
 
         int class_frequency = getClassFrequency(i);
+        //cout << "class frequency:" << class_frequency << endl;
 
-        cout << "Working after 1st loop" << endl;
+        //cout << "Working after 1st loop" << endl;
 
         for (int j = 0; j < probabilities[0].size(); j++) {
 
-            cout << "Working after 2nd loop" << endl;
+          //  cout << "Working after 2nd loop" << endl;
 
             for (int k = 0; k < probabilities[0][0].size(); k++) {
 
-                cout << "Working after 3rd loop" << endl;
+            //    cout << "Working after 3rd loop" << endl;
 
                 probabilities[i][j][k] = (LAPLACE_VALUE + getFeaturesSum(i, j, k)
                                                           / (2 * LAPLACE_VALUE + class_frequency));
+               // cout << probabilities[i][j][k] << endl;
 
-                cout << "working after calculations" << endl;
+              //  cout << "working after calculations" << endl;
             }
         }
     }
@@ -193,7 +211,7 @@ void ImageData::findProbabilities() {
 
 void ImageData::findPriors() {
     for (int i = 0; i < priors.size(); ++i) {
-        priors[i] = getClassFrequency(i) / training_images.size();
+        priors[i] = double(getClassFrequency(i)) / training_images.size();
     }
 }
 
@@ -233,7 +251,11 @@ void ImageData::classifyImages() {
         for (int i = 0; i < NUM_CLASSES; ++i) {
             for (int j = 0; j < image.getImage().size(); ++j) {
                 for (int k = 0; k < image.getImage()[0].size(); ++k) {
-                    class_probabilities[i] += log(probabilities[i][j][k]);
+                    if (image.getImage()[j][k]) {
+                        class_probabilities[i] += log(probabilities[i][j][k]);
+                    } else {
+                        class_probabilities[i] += log(1 - probabilities[i][j][k]);
+                    }
                 }
             }
         }
@@ -244,16 +266,16 @@ void ImageData::classifyImages() {
 }
 
 double ImageData::getAccuracyRate() {
-    int num_images = 0;
+    //int num_images = 0;
     int num_correct_predictions = 0;
 
     for (Image image : test_images) {
-        num_images++;
+        //num_images++;
 
         if (image.getPredictedLabel() == image.getImageLabel()) {
             num_correct_predictions++;
         }
     }
 
-    return ((double)(num_correct_predictions) / num_images);
+    return ((double)(num_correct_predictions) / test_images.size());
 }

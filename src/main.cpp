@@ -48,6 +48,8 @@ int main() {
 
     cout << imageData.getAccuracyRate() << endl;
 
+    imageData.saveModel("../data/saved_model");
+
     //cout << "priors working" << endl;
 
     //imageData.getLogPriors();
