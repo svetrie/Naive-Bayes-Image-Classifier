@@ -56,5 +56,8 @@ int main() {
 
     //imageData.getLogPriors();
 
+    imageData.loadModel("../data/saved_model");
+
+
     return 0;
 }

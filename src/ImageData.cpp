@@ -117,7 +117,54 @@ void ImageData::loadLabels(const char* file_name, vector<Image>* images) {
 }
 
 void ImageData::loadModel(const char* file_name) {
+    ifstream myFile;
+    myFile.open(file_name);
 
+    char* feature_probabiltity;
+    int line = 1;
+
+    cout << "works fine 1" << endl;
+
+
+    for (int i = 0; i < probabilities.size(); i++) {
+
+        cout << "works 2" << endl;
+
+        for (int j = 0; j < probabilities[0].size(); ++j) {
+
+            cout << "works 3" << endl;
+
+            for (int k = 0; k < probabilities[0][0].size(); ++k) {
+
+                cout << "works 4" << endl;
+
+                myFile.getline(feature_probabiltity, line);
+                probabilities[i][j][k] = atof(feature_probabiltity);
+                line++;
+            }
+        }
+    }
+
+    char* prior_value;
+
+    cout << "works efore priors" << endl;
+
+    for (int m = 0; m < priors.size(); ++m) {
+        cout << "works 5#" << endl;
+
+        myFile.getline(prior_value, line);
+
+        cout << "works 6 " << endl;
+
+        priors[m] = atof(prior_value);
+
+        cout << "works 7 " << endl;
+
+        line++;
+    }
+
+    cout << probabilities[0][0][2] << endl;
+    cout << priors[5] << endl;
 }
 
 void ImageData::saveModel(const char* file_name) {
@@ -136,11 +183,6 @@ void ImageData::saveModel(const char* file_name) {
         newFile << class_prior << endl;
     }
 
-/*
-    for (double class_prior : priors) {
-        new
-    }
-*/
 }
 
 void ImageData::findClassFrequencies() {
@@ -258,13 +300,12 @@ void ImageData::classifyImages() {
                 for (int k = 0; k < image.getImage()[0].size(); ++k) {
                     if (image.getImage()[j][k]) {
                         class_probabilities[i] += log(probabilities[i][j][k]);
-                    } else {
-                        class_probabilities[i] += log(1 - probabilities[i][j][k]);
                     }
                 }
             }
         }
 
+        cout << getMostProbableClass(class_probabilities) << endl;
         image.setPredictedLabel(getMostProbableClass(class_probabilities));
         class_probabilities = initial_probabilities;
     }
