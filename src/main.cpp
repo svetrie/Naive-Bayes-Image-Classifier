@@ -38,6 +38,8 @@ int main() {
 
     cout << "loads test labels" << endl;
 
+    imageData.findClassFrequencies();
+
     imageData.findProbabilities();
 
     //cout << "probabilities working" << endl;

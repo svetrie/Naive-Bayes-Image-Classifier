@@ -132,6 +132,10 @@ void ImageData::saveModel(const char* file_name) {
         }
     }
 
+    for (double class_prior : priors) {
+        newFile << class_prior << endl;
+    }
+
 /*
     for (double class_prior : priors) {
         new
@@ -185,8 +189,9 @@ void ImageData::findProbabilities() {
     for (int i = 0; i < probabilities.size(); i++) {
 
        // cout << "Class freq" << endl;
+        // dl;
 
-        int class_frequency = getClassFrequency(i);
+        //int class_frequency = getClassFrequency(i);
         //cout << "class frequency:" << class_frequency << endl;
 
         //cout << "Working after 1st loop" << endl;
@@ -199,8 +204,8 @@ void ImageData::findProbabilities() {
 
             //    cout << "Working after 3rd loop" << endl;
 
-                probabilities[i][j][k] = (LAPLACE_VALUE + getFeaturesSum(i, j, k)
-                                                          / (2 * LAPLACE_VALUE + class_frequency));
+                probabilities[i][j][k] = ((LAPLACE_VALUE + getFeaturesSum(i, j, k))
+                                                          / (2 * LAPLACE_VALUE + class_frequencies[i]));
                // cout << probabilities[i][j][k] << endl;
 
               //  cout << "working after calculations" << endl;
@@ -211,7 +216,7 @@ void ImageData::findProbabilities() {
 
 void ImageData::findPriors() {
     for (int i = 0; i < priors.size(); ++i) {
-        priors[i] = double(getClassFrequency(i)) / training_images.size();
+        priors[i] = double(class_frequencies[i] * 1.0) / training_images.size();
     }
 }
 
