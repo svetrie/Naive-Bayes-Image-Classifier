@@ -24,7 +24,6 @@ public:
     static constexpr double LAPLACE_VALUE = 10.0;
     static constexpr int NUM_CLASSES = 10;
 
-    vector<double>* getPriors();
     void findPriors();
     vector<double> getLogPriors();
 

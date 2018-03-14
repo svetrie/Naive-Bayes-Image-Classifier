@@ -23,9 +23,9 @@ int main() {
     imageData.findPriors();
 
     imageData.classifyImages();
+    cout << imageData.getAccuracyRate() << endl;
 
     imageData.saveModel("../data/saved_model");
-    imageData.loadModel("../data/saved_model");
 
     return 0;
 }

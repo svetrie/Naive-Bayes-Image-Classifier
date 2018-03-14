@@ -151,7 +151,8 @@ void ImageData::findProbabilities() {
     for (int i = 0; i < probabilities.size(); i++) {
         for (int j = 0; j < probabilities[0].size(); j++) {
             for (int k = 0; k < probabilities[0][0].size(); k++) {
-                probabilities[i][j][k] = ((LAPLACE_VALUE + getFeaturesSum(i, j, k)));
+                probabilities[i][j][k] = ((LAPLACE_VALUE + getFeaturesSum(i, j, k))
+                                          / 2 * LAPLACE_VALUE + class_frequencies[i]);
             }
         }
     }
@@ -161,11 +162,6 @@ void ImageData::findPriors() {
     for (int i = 0; i < priors.size(); ++i) {
         priors[i] = double(class_frequencies[i] * 1.0) / training_images.size();
     }
-}
-
-vector<double>* ImageData::getPriors() {
-    vector<double>* priors_ptr = &priors;
-    return priors_ptr;
 }
 
 vector<double> ImageData::getLogPriors() {
@@ -206,7 +202,6 @@ void ImageData::classifyImages() {
             }
         }
 
-        cout << getMostProbableClass(class_probabilities) << endl;
         image.setPredictedLabel(getMostProbableClass(class_probabilities));
         class_probabilities = initial_probabilities;
     }
