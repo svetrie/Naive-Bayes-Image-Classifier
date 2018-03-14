@@ -6,15 +6,7 @@
 
 vector<vector<bool>> Image::getImage() {
     return image_pixels;
-    //vector<vector<bool>>* image_ptr = &image_pixels;
-    //return image_ptr;
 }
-
-/*int* Image::getImageLabel() {
-    //return image_label;
-    int* image_label_ptr = &image_label;
-    return image_label_ptr;
-}*/
 
 int Image::getImageLabel() {
     return image_label;
