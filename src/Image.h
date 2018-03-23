@@ -11,10 +11,10 @@ using namespace std;
 
 class Image {
 private:
-    //static const int IMAGE_SIZE = 28;
     vector<vector<bool>> image_pixels;
     int image_label;
     int predicted_label;
+
 public:
     Image(vector<vector<bool>>);
 
@@ -26,8 +26,4 @@ public:
 
     int getPredictedLabel();
     void setPredictedLabel(int class_label);
-
-
-    //int* getImageLabel();
-    //int* getPredictedLabel();
 };

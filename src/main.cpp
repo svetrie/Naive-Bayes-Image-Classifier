@@ -5,27 +5,30 @@
 #include <iostream>
 #include <fstream>
 
-#include "ImageData.h"
+#include "NaiveBayesClassifier.h"
 
 #include <vector>
 
 int main() {
-    ImageData imageData;
+    NaiveBayesClassifier imageData;
 
-    imageData.loadImages("../data/sample_training_images", imageData.getTrainingImages());
-    imageData.loadLabels("../data/sample_training_labels", imageData.getTrainingImages());
+    imageData.setTrainingImages(imageData.loadImages("../data/sample_training_images", "../data/sample_training_labels"));
+    imageData.setTestImages(imageData.loadImages("../data/sample_test_images", "../data/sample_test_labels"));
 
-    imageData.loadImages("../data/sample_test_images", imageData.getTestImages());
-    imageData.loadLabels("../data/sample_test_labels", imageData.getTestImages());
+    /*
+    imageData.loadImageFeatures("../data/sample_training_images", imageData.getTrainingImages());
+    imageData.loadImageLabels("../data/sample_training_labels", imageData.getTrainingImages());
+
+    imageData.loadImageFeatures("../data/sample_test_images", imageData.getTestImages());
+    imageData.loadImageLabels("../data/sample_test_labels", imageData.getTestImages());
+*/
 
     imageData.findClassFrequencies();
     imageData.findProbabilities();
     imageData.findPriors();
 
     imageData.classifyImages();
-    cout << imageData.getAccuracyRate() << endl;
+    cout << "Accuracy Rate: " << imageData.getAccuracyRate() * 100 << "%" << endl;
 
     imageData.saveModel("../data/saved_model");
-
-    return 0;
 }
