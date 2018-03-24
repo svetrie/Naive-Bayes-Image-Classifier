@@ -4,7 +4,7 @@
 
 #include "Image.h"
 
-vector<vector<bool>> Image::getImage() {
+vector<vector<bool>> Image::getFeatures() {
     return image_pixels;
 }
 

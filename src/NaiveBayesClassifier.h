@@ -45,6 +45,7 @@ class NaiveBayesClassifier {
         int getFeaturesSum(int class_num, int row, int col);
         void findProbabilities();
 
+        double findImageClassProbability(Image test_img, int class_num);
         int getMostProbableClass(vector<double> class_probabilities);
         void classifyImages();
         double getAccuracyRate();

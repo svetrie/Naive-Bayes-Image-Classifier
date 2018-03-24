@@ -19,7 +19,7 @@ public:
     Image(vector<vector<bool>>);
 
     static const int IMAGE_SIZE = 28;
-    vector<vector<bool>> getImage();
+    vector<vector<bool>> getFeatures();
 
     int getImageLabel();
     void setImageLabel(int class_label);
