@@ -18,6 +18,7 @@ class NaiveBayesClassifier {
         vector<vector<vector<double>>> probabilities;
         vector<double> priors;
         vector<int> class_frequencies;
+        vector<vector<double>> confusion_matrix;
 
     public:
         NaiveBayesClassifier();
@@ -49,7 +50,7 @@ class NaiveBayesClassifier {
         int getMostProbableClass(vector<double> class_probabilities);
         void classifyImages();
         double getAccuracyRate();
-
+        void printConfusionMatrix();
 
         void saveModel(const char* file_name);
         void loadModel(const char* file_name);

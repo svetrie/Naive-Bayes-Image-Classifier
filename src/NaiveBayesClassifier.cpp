@@ -19,6 +19,7 @@ NaiveBayesClassifier::NaiveBayesClassifier() {
 
     priors = vector<double>(NUM_CLASSES);
     class_frequencies = vector<int>(NUM_CLASSES);
+    confusion_matrix = vector<vector<double>>(NUM_CLASSES, vector<double>(NUM_CLASSES, 0));
 }
 
 vector<Image> NaiveBayesClassifier::getTrainingImages() {
@@ -286,13 +287,13 @@ int NaiveBayesClassifier::getMostProbableClass(vector<double> class_probabilitie
 }
 
 double NaiveBayesClassifier::findImageClassProbability(Image test_img, int class_num) {
-    //Image img = test_img;
+    Image img = test_img;
 
     double class_probability;
 
-    for (int i = 0; i < test_img.getFeatures().size(); ++i) {
-        for (int j = 0; j < test_img.getFeatures()[0].size(); ++j) {
-            if (test_img.getFeatures()[i][j]) {
+    for (int i = 0; i < img.getFeatures().size(); ++i) {
+        for (int j = 0; j < img.getFeatures()[0].size(); ++j) {
+            if (img.getFeatures()[i][j]) {
                 class_probability += log(probabilities[class_num][i][j]);
             } else {
                 class_probability += log(1 - probabilities[class_num][i][j]);
@@ -324,7 +325,7 @@ void NaiveBayesClassifier::classifyImages() {
         for (int j = 0; j < NUM_CLASSES; ++j) {
 
             //Image img = test_images[i];
-            class_probabilities[j] = findImageClassProbability(test_images[i],j);
+            class_probabilities[j] = findImageClassProbability(test_images[i], j);
             /* create helper function for these two for loops
             for (int k = 0; k < test_images[i].getImage().size(); ++k) {
                 for (int m = 0; m < test_images[i].getImage()[0].size(); ++m) {
@@ -357,4 +358,23 @@ double NaiveBayesClassifier::getAccuracyRate() {
     }
 
     return ((double)(num_correct_predictions) / test_images.size());
+}
+
+void NaiveBayesClassifier::printConfusionMatrix() {
+    vector<double> test_class_frequencies(NUM_CLASSES,0);
+
+    for (auto &test_img : test_images) {
+        test_class_frequencies[test_img.getImageLabel()]++;
+        confusion_matrix[test_img.getImageLabel()][test_img.getPredictedLabel()]++;
+    }
+
+    for (int i = 0; i < confusion_matrix.size(); ++i) {
+        for (int j = 0; j < confusion_matrix[0].size(); ++j) {
+            confusion_matrix[i][j] = (confusion_matrix[i][j] / test_class_frequencies[i]) * 100;
+            confusion_matrix[i][j] = floor(confusion_matrix[i][j] * 100 + 0.5) / 100;
+
+            cout << confusion_matrix[i][j] << "   ";
+        }
+        cout << endl;
+    }
 }

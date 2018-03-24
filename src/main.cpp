@@ -30,5 +30,7 @@ int main() {
     imageData.classifyImages();
     cout << "Accuracy Rate: " << imageData.getAccuracyRate() * 100 << "%" << endl;
 
+    imageData.printConfusionMatrix();
+
     imageData.saveModel("../data/saved_model");
 }
