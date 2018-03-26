@@ -158,7 +158,6 @@ vector<int> NaiveBayesClassifier::loadImageLabels(const char *file_name) {
 
     vector<int> image_labels;
     string label;
-    int i = 0;
 
     while (getline(inFile, label)) {
         stringstream strstream(label);
@@ -286,14 +285,14 @@ int NaiveBayesClassifier::getMostProbableClass(vector<double> class_probabilitie
     return class_num;
 }
 
-double NaiveBayesClassifier::findImageClassProbability(Image test_img, int class_num) {
-    Image img = test_img;
-
+double NaiveBayesClassifier::findImageClassProbability(Image img, int class_num) {
+    //Image test_img = img;
+    Image& test_img = img;
     double class_probability;
 
-    for (int i = 0; i < img.getFeatures().size(); ++i) {
-        for (int j = 0; j < img.getFeatures()[0].size(); ++j) {
-            if (img.getFeatures()[i][j]) {
+    for (int i = 0; i < test_img.getFeatures().size(); ++i) {
+        for (int j = 0; j < test_img.getFeatures()[0].size(); ++j) {
+            if (test_img.getFeatures()[i][j]) {
                 class_probability += log(probabilities[class_num][i][j]);
             } else {
                 class_probability += log(1 - probabilities[class_num][i][j]);
@@ -323,8 +322,8 @@ void NaiveBayesClassifier::classifyImages() {
 
     for (int i = 0; i < test_images.size(); i++) {
         for (int j = 0; j < NUM_CLASSES; ++j) {
-
             //Image img = test_images[i];
+            //Image& test_img = test_images[i];
             class_probabilities[j] = findImageClassProbability(test_images[i], j);
             /* create helper function for these two for loops
             for (int k = 0; k < test_images[i].getImage().size(); ++k) {
@@ -343,16 +342,17 @@ void NaiveBayesClassifier::classifyImages() {
     }
 }
 
+// changed enhanced for loop
 double NaiveBayesClassifier::getAccuracyRate() {
     int num_correct_predictions = 0;
 
-    for (Image image : test_images) {
+    for (auto &test_img : test_images) {
 
-        cout << image.getPredictedLabel() << endl;
-        cout << image.getImageLabel() << endl;
+        cout << test_img.getPredictedLabel() << endl;
+        cout << test_img.getImageLabel() << endl;
         cout << endl;
 
-        if (image.getPredictedLabel() == image.getImageLabel()) {
+        if (test_img.getPredictedLabel() == test_img.getImageLabel()) {
             num_correct_predictions++;
         }
     }

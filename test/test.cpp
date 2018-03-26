@@ -4,13 +4,8 @@
 
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
-#include "../src/ImageData.h"
-
+#include "../src/NaiveBayesClassifier.h"
 
 TEST_CASE("LoadTrainingImageData") {
-    ImageData imageData;
-    imageData.loadImages("../data/sample_training_images", imageData.getTrainingImages());
-    imageData.loadLabels("../data/sample_training_labels", imageData.getTrainingImages());
-
-    REQUIRE((*imageData.getTrainingImages())[0].getImageLabel() == 9);
+    NaiveBayesClassifier imageClassifier;
 }
