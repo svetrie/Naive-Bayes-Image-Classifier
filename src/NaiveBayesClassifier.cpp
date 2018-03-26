@@ -189,25 +189,35 @@ void NaiveBayesClassifier::loadModel(const char* file_name) {
     ifstream myFile;
     myFile.open(file_name);
 
-    char* feature_probabiltity;
+    cout << "Seg fault 1 avoided" << endl;
+
+    string feature_probabiltity;
 
     for (int i = 0; i < probabilities.size(); i++) {
         for (int j = 0; j < probabilities[0].size(); ++j) {
             for (int k = 0; k < probabilities[0][0].size(); ++k) {
-                myFile.getline(feature_probabiltity, 10);
-                probabilities[i][j][k] = atof(feature_probabiltity);
+                //myFile.getline(feature_probabiltity, 10);
+                getline(myFile, feature_probabiltity);
+                cout << feature_probabiltity << endl;
+                probabilities[i][j][k] = stod(feature_probabiltity);
             }
         }
     }
 
-    char* prior_value;
+    cout << "Seg fault 2 avoided" << endl;
+
+    string prior_value;
 
     for (int m = 0; m < priors.size(); ++m) {
-        myFile.getline(prior_value, 10);
-        priors[m] = atof(prior_value);
+        getline(myFile, prior_value);
+        priors[m] = stod(prior_value);
     }
 
+    cout << "Seg fault 3 avoided" << endl;
+
     myFile.close();
+
+    cout << "Closed file" << endl;
 }
 
 void NaiveBayesClassifier::saveModel(const char* file_name) {

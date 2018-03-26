@@ -71,25 +71,32 @@ int main() {
     }
 
 
+/*
+    NaiveBayesClassifier imageClassifier;
 
+    imageClassifier.setTrainingImages(imageClassifier.loadImages("../data/sample_training_images", "../data/sample_training_labels"));
+    imageClassifier.setTestImages(imageClassifier.loadImages("../data/sample_test_images", "../data/sample_test_labels"));
 
+    imageClassifier.findClassFrequencies();
+    imageClassifier.findProbabilities();
+    imageClassifier.findPriors();
+
+    imageClassifier.classifyImages();
+    cout << "Accuracy Rate: " << imageClassifier.getAccuracyRate() * 100 << "%" << endl;
+
+    imageClassifier.printConfusionMatrix();
+
+    imageClassifier.saveModel("../data/saved_model");
+
+    return 0;
+ */
+
+    //NaiveBayesClassifier imageClassifer;
+    //imageClassifer.loadModel("../data/saved_model");
 
     /*
-    NaiveBayesClassifier imageData;
-
-    imageData.setTrainingImages(imageData.loadImages("../data/sample_training_images", "../data/sample_training_labels"));
-    imageData.setTestImages(imageData.loadImages("../data/sample_test_images", "../data/sample_test_labels"));
-
-    imageData.findClassFrequencies();
-    imageData.findProbabilities();
-    imageData.findPriors();
-
-    imageData.classifyImages();
-    cout << "Accuracy Rate: " << imageData.getAccuracyRate() * 100 << "%" << endl;
-
-    imageData.printConfusionMatrix();
-
-    imageData.saveModel("../data/saved_model");
-
-    return 0;*/
+    ///mnt/c/Users/Vet Senthil/CLionProjects/naivebayes-svetrie/cmake-build-debug
+    */
 }
+
+
