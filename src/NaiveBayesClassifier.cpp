@@ -189,22 +189,16 @@ void NaiveBayesClassifier::loadModel(const char* file_name) {
     ifstream myFile;
     myFile.open(file_name);
 
-    cout << "Seg fault 1 avoided" << endl;
-
     string feature_probabiltity;
 
     for (int i = 0; i < probabilities.size(); i++) {
         for (int j = 0; j < probabilities[0].size(); ++j) {
             for (int k = 0; k < probabilities[0][0].size(); ++k) {
-                //myFile.getline(feature_probabiltity, 10);
                 getline(myFile, feature_probabiltity);
-                cout << feature_probabiltity << endl;
                 probabilities[i][j][k] = stod(feature_probabiltity);
             }
         }
     }
-
-    cout << "Seg fault 2 avoided" << endl;
 
     string prior_value;
 
@@ -214,11 +208,7 @@ void NaiveBayesClassifier::loadModel(const char* file_name) {
         cout << prior_value << endl;
     }
 
-    cout << "Seg fault 3 avoided" << endl;
-
     myFile.close();
-
-    cout << "Closed file" << endl;
 }
 
 void NaiveBayesClassifier::saveModel(const char* file_name) {
@@ -297,7 +287,6 @@ int NaiveBayesClassifier::getMostProbableClass(vector<double> class_probabilitie
 }
 
 double NaiveBayesClassifier::findImageClassProbability(Image img, int class_num) {
-    //Image test_img = img;
     Image& test_img = img;
     double class_probability;
 
@@ -310,20 +299,7 @@ double NaiveBayesClassifier::findImageClassProbability(Image img, int class_num)
             }
         }
     }
-
-    cout << class_probability << endl;
-
     return class_probability;
-   /*
-    for (int k = 0; k < test_images[i].getImage().size(); ++k) {
-        for (int m = 0; m < test_images[i].getImage()[0].size(); ++m) {
-            if (test_images[i].getFeatures()[k][m]) {
-                class_probabilities[j] += log(probabilities[j][k][m]);
-            } else {
-                class_probabilities[j] += log(1 - probabilities[j][k][m]);
-            }
-        }
-    }*/
 }
 
 void NaiveBayesClassifier::classifyImages() {
@@ -333,19 +309,7 @@ void NaiveBayesClassifier::classifyImages() {
 
     for (int i = 0; i < test_images.size(); i++) {
         for (int j = 0; j < NUM_CLASSES; ++j) {
-            //Image img = test_images[i];
-            //Image& test_img = test_images[i];
             class_probabilities[j] = findImageClassProbability(test_images[i], j);
-            /* create helper function for these two for loops
-            for (int k = 0; k < test_images[i].getImage().size(); ++k) {
-                for (int m = 0; m < test_images[i].getImage()[0].size(); ++m) {
-                    if (test_images[i].getFeatures()[k][m]) {
-                        class_probabilities[j] += log(probabilities[j][k][m]);
-                    } else {
-                        class_probabilities[j] += log(1 - probabilities[j][k][m]);
-                    }
-                }
-            }*/
         }
 
         test_images[i].setPredictedLabel(getMostProbableClass(class_probabilities));
@@ -353,7 +317,6 @@ void NaiveBayesClassifier::classifyImages() {
     }
 }
 
-// changed enhanced for loop
 double NaiveBayesClassifier::getAccuracyRate() {
     int num_correct_predictions = 0;
 
@@ -373,6 +336,7 @@ double NaiveBayesClassifier::getAccuracyRate() {
 
 void NaiveBayesClassifier::printConfusionMatrix() {
     vector<double> test_class_frequencies(NUM_CLASSES,0);
+    vector<vector<double>> confusion_matrix;
 
     for (auto &test_img : test_images) {
         test_class_frequencies[test_img.getImageLabel()]++;

@@ -18,7 +18,7 @@ class NaiveBayesClassifier {
         vector<vector<vector<double>>> probabilities;
         vector<double> priors;
         vector<int> class_frequencies;
-        vector<vector<double>> confusion_matrix;
+        //vector<vector<double>> confusion_matrix;
 
     public:
         NaiveBayesClassifier();
