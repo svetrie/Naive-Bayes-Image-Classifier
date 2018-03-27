@@ -19,7 +19,7 @@ NaiveBayesClassifier::NaiveBayesClassifier() {
 
     priors = vector<double>(NUM_CLASSES);
     class_frequencies = vector<int>(NUM_CLASSES);
-    confusion_matrix = vector<vector<double>>(NUM_CLASSES, vector<double>(NUM_CLASSES, 0));
+    //confusion_matrix = vector<vector<double>>(NUM_CLASSES, vector<double>(NUM_CLASSES, 0));
 }
 
 vector<Image> NaiveBayesClassifier::getTrainingImages() {
@@ -36,6 +36,14 @@ void NaiveBayesClassifier::setTrainingImages(vector<Image> images) {
 
 void NaiveBayesClassifier::setTestImages(vector<Image> images) {
     test_images = images;
+}
+
+vector<int> NaiveBayesClassifier::getClassFrequencies() {
+    return class_frequencies;
+}
+
+vector<double> NaiveBayesClassifier::getPriors() {
+    return priors;
 }
 
 /*
@@ -260,15 +268,15 @@ void NaiveBayesClassifier::findProbabilities() {
 
 void NaiveBayesClassifier::findPriors() {
     for (int i = 0; i < priors.size(); ++i) {
-        priors[i] = double(class_frequencies[i] * 1.0) / training_images.size();
+        priors[i] = double(class_frequencies[i]) / training_images.size();
     }
 }
 
-vector<double> NaiveBayesClassifier::getLogPriors() {
-    vector<double> log_priors(NUM_CLASSES);
+vector<double> NaiveBayesClassifier::findLogPriors() {
+    vector<double> log_priors;
 
-    for (double class_probability : priors) {
-        log(class_probability);
+    for (double &class_probability : priors) {
+        log_priors.push_back(log(class_probability));
     }
 
     return log_priors;
@@ -304,7 +312,7 @@ double NaiveBayesClassifier::findImageClassProbability(Image img, int class_num)
 
 void NaiveBayesClassifier::classifyImages() {
     vector<double> class_probabilities;
-    vector<double> initial_probabilities = getLogPriors();
+    vector<double> initial_probabilities = findLogPriors();
     class_probabilities = initial_probabilities;
 
     for (int i = 0; i < test_images.size(); i++) {
@@ -336,7 +344,7 @@ double NaiveBayesClassifier::getAccuracyRate() {
 
 void NaiveBayesClassifier::printConfusionMatrix() {
     vector<double> test_class_frequencies(NUM_CLASSES,0);
-    vector<vector<double>> confusion_matrix;
+    vector<vector<double>> confusion_matrix = vector<vector<double>>(NUM_CLASSES, vector<double>(NUM_CLASSES, 0));
 
     for (auto &test_img : test_images) {
         test_class_frequencies[test_img.getImageLabel()]++;

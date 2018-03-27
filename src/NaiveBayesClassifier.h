@@ -27,6 +27,8 @@ class NaiveBayesClassifier {
 
         vector<Image> getTrainingImages();
         vector<Image> getTestImages();
+        vector<int> getClassFrequencies();
+        vector<double> getPriors();
 
         void setTrainingImages(vector<Image>);
         void setTestImages(vector<Image>);
@@ -42,7 +44,7 @@ class NaiveBayesClassifier {
 
         void findClassFrequencies();
         void findPriors();
-        vector<double> getLogPriors();
+        vector<double> findLogPriors();
         int getFeaturesSum(int class_num, int row, int col);
         void findProbabilities();
 
