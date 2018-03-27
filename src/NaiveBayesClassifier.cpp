@@ -211,6 +211,7 @@ void NaiveBayesClassifier::loadModel(const char* file_name) {
     for (int m = 0; m < priors.size(); ++m) {
         getline(myFile, prior_value);
         priors[m] = stod(prior_value);
+        cout << prior_value << endl;
     }
 
     cout << "Seg fault 3 avoided" << endl;
