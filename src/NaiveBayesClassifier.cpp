@@ -12,14 +12,12 @@
 #include <complex>
 #include <math.h>
 
-
 NaiveBayesClassifier::NaiveBayesClassifier() {
     probabilities = vector<vector<vector<double>>>(NUM_CLASSES
             ,vector<vector<double>>(Image::IMAGE_SIZE, vector<double>(Image::IMAGE_SIZE, 0)));
 
     priors = vector<double>(NUM_CLASSES);
     class_frequencies = vector<int>(NUM_CLASSES);
-    //confusion_matrix = vector<vector<double>>(NUM_CLASSES, vector<double>(NUM_CLASSES, 0));
 }
 
 vector<Image> NaiveBayesClassifier::getTrainingImages() {
@@ -49,54 +47,6 @@ vector<double> NaiveBayesClassifier::getPriors() {
 vector<vector<vector<double>>> NaiveBayesClassifier::getProbabilities() {
     return probabilities;
 }
-
-/*
-vector<Image>* NaiveBayesClassifier::getTrainingImages() {
-    vector<Image>* training_images_ptr = &training_images;
-    return training_images_ptr;
-}*/
-
-/*
-vector<Image>* NaiveBayesClassifier::getTestImages() {
-    vector<Image>* testing_images_ptr = &test_images;
-    return testing_images_ptr;
-}*/
-
-/*
- * MAke this return an image vector so you dont have to pass in a pointer
-
-void NaiveBayesClassifier::loadImageFeatures(const char *file_name, vector<Image> *images) {
-    ifstream inFile;
-    inFile.open(file_name);
-
-    if (!inFile) {
-         cout << "Unable to open file datafile.txt" << endl;
-    }
-
-    vector<vector<bool>> training_image;
-    string line;
-
-    for(int i = 0; getline(inFile, line); i = (i + 1) % 28) {
-        vector<bool> row(28, false);
-
-        for (int j = 0; j < line.size(); ++j) {
-            row[j] = (line[j] != ' ');
-        }
-
-        training_image.push_back(row);
-
-        if (i == 27) {
-            Image image(training_image);
-            images->push_back(image);
-
-            training_image.clear();
-        }
-    }
-
-    inFile.close();
-}
-
- */
 
 vector<Image> NaiveBayesClassifier::loadImageFeatures(const char *file_name) {
     vector<Image> images;
@@ -131,34 +81,6 @@ vector<Image> NaiveBayesClassifier::loadImageFeatures(const char *file_name) {
     imgs_file.close();
     return images;
 }
-
-/*
- * Return an int vector of labels and use a helper method to assign labels
- * to images. Don't pass in a pointer
-
-
-void NaiveBayesClassifier::loadImageLabels(const char *file_name, vector<Image> *images) {
-    ifstream inFile;
-    inFile.open(file_name);
-
-    if (!inFile) {
-        cout << "Unable to open file datafile.txt" << endl;
-    }
-
-    string image_label;
-    int i = 0;
-
-    while (getline(inFile, image_label)) {
-        stringstream strstream(image_label);
-        int label_num = 0;
-        strstream >> label_num;
-
-        (*images)[i++].setImageLabel(label_num);
-    }
-
-    inFile.close();
-}
-*/
 
 vector<int> NaiveBayesClassifier::loadImageLabels(const char *file_name) {
     ifstream labels_file;
@@ -241,7 +163,6 @@ void NaiveBayesClassifier::saveModel(const char* file_name) {
     for (double class_prior : priors) {
         new_file << class_prior << endl;
     }
-
 }
 
 void NaiveBayesClassifier::findClassFrequencies() {
@@ -337,8 +258,8 @@ double NaiveBayesClassifier::getAccuracyRate() {
 
     for (auto &test_img : test_images) {
 
-        cout << test_img.getPredictedLabel() << endl;
-        cout << test_img.getImageLabel() << endl;
+        cout << "Predicted Label: " << test_img.getPredictedLabel() << endl;
+        cout << "Actual Label: " << test_img.getImageLabel() << endl;
         cout << endl;
 
         if (test_img.getPredictedLabel() == test_img.getImageLabel()) {

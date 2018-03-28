@@ -127,9 +127,10 @@ TEST_CASE("LoadModelProbabilitiesTest") {
     NaiveBayesClassifier dataLoader;
     dataLoader.loadModel("../data/test_saved_model");
 
+
     REQUIRE(std::abs(dataLoader.getProbabilities()[0][0][0] - imageClassifier.getProbabilities()[0][0][0]) < 0.0001);
     REQUIRE(std::abs(dataLoader.getProbabilities()[5][14][14] - imageClassifier.getProbabilities()[5][14][14]) < 0.0001);
-    REQUIRE(std::abs(dataLoader.getProbabilities()[10][28][28] - imageClassifier.getProbabilities()[10][28][28]) < 0.0001);
+    REQUIRE(std::abs(dataLoader.getProbabilities()[9][27][27] - imageClassifier.getProbabilities()[9][27][27]) < 0.0001);
 }
 
 TEST_CASE("LoadModelPriorsTest") {
