@@ -6,8 +6,7 @@
 #include "catch.hpp"
 #include "../src/NaiveBayesClassifier.h"
 #include <string>
-
-
+#include <fstream>
 
 TEST_CASE("LoadImageLabelsTest") {
     NaiveBayesClassifier imageClassifier;
@@ -37,9 +36,7 @@ TEST_CASE("FindClassFrequenciesTest") {
 
     vector<int> expected_frequencies = {3, 10, 4, 3, 5, 5, 4, 4, 5, 4};
 
-    for (int i = 0; i < imageClassifier.getClassFrequencies().size(); ++i) {
-        REQUIRE(imageClassifier.getClassFrequencies()[i] == expected_frequencies[i]);
-    }
+    REQUIRE(expected_frequencies == imageClassifier.getClassFrequencies());
 }
 
 TEST_CASE("CalculatePriorsTest") {
@@ -70,7 +67,7 @@ TEST_CASE("FindLogPriorsTest") {
     }
 }
 
-TEST_CASE("GetFeaturesSum") {
+TEST_CASE("GetFeatureSumTest") {
     NaiveBayesClassifier imageClassifier;
     imageClassifier.setTrainingImages(imageClassifier.loadImages("../data/sample_training_images"
             , "../data/sample_training_labels"));
@@ -78,5 +75,77 @@ TEST_CASE("GetFeaturesSum") {
     REQUIRE(imageClassifier.getFeaturesSum(9, 11, 16) == 4);
     REQUIRE(imageClassifier.getFeaturesSum(1, 12, 13) == 9);
     REQUIRE(imageClassifier.getFeaturesSum(0, 15, 15) == 0);
+}
+
+TEST_CASE("CalculateProbabilitiesTest") {
+    NaiveBayesClassifier imageClassifier;
+    imageClassifier.setTrainingImages(imageClassifier.loadImages("../data/sample_training_images"
+            , "../data/sample_training_labels"));
+    imageClassifier.findClassFrequencies();
+    imageClassifier.findProbabilities();
+
+    REQUIRE(std::abs(imageClassifier.getProbabilities()[9][11][16] - .833333) < 0.00001);
+    REQUIRE(std::abs(imageClassifier.getProbabilities()[1][12][13] - .833333) < 0.00001);
+    REQUIRE(std::abs(imageClassifier.getProbabilities()[0][15][15] - 0.2) < 0.00001);
+}
+
+TEST_CASE("GetMostProbableClass") {
+    NaiveBayesClassifier imageClassifier;
+    vector<double> class_probabilities = {0, 5, 4, 89, 92, 0, 0, 23, -90, .234466};
+
+    REQUIRE(imageClassifier.getMostProbableClass(class_probabilities) == 4);
+}
+
+TEST_CASE("SaveModelTest") {
+    NaiveBayesClassifier imageClassifier;
+    imageClassifier.setTrainingImages(imageClassifier.loadImages("../data/sample_training_images"
+            , "../data/sample_training_labels"));
+    imageClassifier.findClassFrequencies();
+    imageClassifier.findProbabilities();
+    imageClassifier.findPriors();
+
+    imageClassifier.saveModel("../data/test_saved_model");
+
+    ifstream saved_file;
+    saved_file.open("../data/test_saved_model");
+
+    string feature_probability;
+    getline(saved_file, feature_probability);
+
+    REQUIRE(imageClassifier.getProbabilities()[0][0][0] == stod(feature_probability));
+}
+
+TEST_CASE("LoadModelProbabilitiesTest") {
+    NaiveBayesClassifier imageClassifier;
+    imageClassifier.setTrainingImages(imageClassifier.loadImages("../data/sample_training_images"
+            , "../data/sample_training_labels"));
+    imageClassifier.findClassFrequencies();
+    imageClassifier.findProbabilities();
+    imageClassifier.findPriors();
+    imageClassifier.saveModel("../data/test_saved_model");
+
+    NaiveBayesClassifier dataLoader;
+    dataLoader.loadModel("../data/test_saved_model");
+
+    REQUIRE(std::abs(dataLoader.getProbabilities()[0][0][0] - imageClassifier.getProbabilities()[0][0][0]) < 0.0001);
+    REQUIRE(std::abs(dataLoader.getProbabilities()[5][14][14] - imageClassifier.getProbabilities()[5][14][14]) < 0.0001);
+    REQUIRE(std::abs(dataLoader.getProbabilities()[10][28][28] - imageClassifier.getProbabilities()[10][28][28]) < 0.0001);
+}
+
+TEST_CASE("LoadModelPriorsTest") {
+    NaiveBayesClassifier imageClassifier;
+    imageClassifier.setTrainingImages(imageClassifier.loadImages("../data/sample_training_images"
+            , "../data/sample_training_labels"));
+    imageClassifier.findClassFrequencies();
+    imageClassifier.findProbabilities();
+    imageClassifier.findPriors();
+    imageClassifier.saveModel("../data/test_saved_model");
+
+    NaiveBayesClassifier dataLoader;
+    dataLoader.loadModel("../data/test_saved_model");
+
+    for (int i = 0; i < dataLoader.getPriors().size(); ++i) {
+        REQUIRE(std::abs(dataLoader.getPriors()[i] - imageClassifier.getPriors()[i]) < 0.00001);
+    }
 }
 

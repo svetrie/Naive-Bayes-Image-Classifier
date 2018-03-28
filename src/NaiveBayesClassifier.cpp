@@ -46,6 +46,10 @@ vector<double> NaiveBayesClassifier::getPriors() {
     return priors;
 }
 
+vector<vector<vector<double>>> NaiveBayesClassifier::getProbabilities() {
+    return probabilities;
+}
+
 /*
 vector<Image>* NaiveBayesClassifier::getTrainingImages() {
     vector<Image>* training_images_ptr = &training_images;
@@ -97,17 +101,17 @@ void NaiveBayesClassifier::loadImageFeatures(const char *file_name, vector<Image
 vector<Image> NaiveBayesClassifier::loadImageFeatures(const char *file_name) {
     vector<Image> images;
 
-    ifstream inFile;
-    inFile.open(file_name);
+    ifstream imgs_file;
+    imgs_file.open(file_name);
 
-    if (!inFile) {
-        cout << "Unable to open file " << file_name << endl;
+    if (!imgs_file) {
+        cout << "File path not recognized" << endl;
     }
 
     vector<vector<bool>> image_features;
     string line;
 
-    for(int i = 0; getline(inFile, line); i = (i + 1) % 28) {
+    for(int i = 0; getline(imgs_file, line); i = (i + 1) % 28) {
         vector<bool> row(28, false);
 
         for (int j = 0; j < line.size(); ++j) {
@@ -124,7 +128,7 @@ vector<Image> NaiveBayesClassifier::loadImageFeatures(const char *file_name) {
         }
     }
 
-    inFile.close();
+    imgs_file.close();
     return images;
 }
 
@@ -157,17 +161,17 @@ void NaiveBayesClassifier::loadImageLabels(const char *file_name, vector<Image> 
 */
 
 vector<int> NaiveBayesClassifier::loadImageLabels(const char *file_name) {
-    ifstream inFile;
-    inFile.open(file_name);
+    ifstream labels_file;
+    labels_file.open(file_name);
 
-    if (!inFile) {
-        cout << "Unable to open file" << file_name << endl;
+    if (!labels_file) {
+        cout << "File path not recognized" << endl;
     }
 
     vector<int> image_labels;
     string label;
 
-    while (getline(inFile, label)) {
+    while (getline(labels_file, label)) {
         stringstream strstream(label);
         int label_num = 0;
         strstream >> label_num;
@@ -175,7 +179,7 @@ vector<int> NaiveBayesClassifier::loadImageLabels(const char *file_name) {
         image_labels.push_back(label_num);
     }
 
-    inFile.close();
+    labels_file.close();
     return image_labels;
 }
 
@@ -194,15 +198,19 @@ vector<Image> NaiveBayesClassifier::loadImages(const char* img_file_name, const 
 }
 
 void NaiveBayesClassifier::loadModel(const char* file_name) {
-    ifstream myFile;
-    myFile.open(file_name);
+    ifstream model_file;
+    model_file.open(file_name);
+
+    if (!model_file) {
+        cout << "File path not recognized" << endl;
+    }
 
     string feature_probabiltity;
 
     for (int i = 0; i < probabilities.size(); i++) {
         for (int j = 0; j < probabilities[0].size(); ++j) {
             for (int k = 0; k < probabilities[0][0].size(); ++k) {
-                getline(myFile, feature_probabiltity);
+                getline(model_file, feature_probabiltity);
                 probabilities[i][j][k] = stod(feature_probabiltity);
             }
         }
@@ -211,28 +219,27 @@ void NaiveBayesClassifier::loadModel(const char* file_name) {
     string prior_value;
 
     for (int m = 0; m < priors.size(); ++m) {
-        getline(myFile, prior_value);
+        getline(model_file, prior_value);
         priors[m] = stod(prior_value);
-        cout << prior_value << endl;
     }
 
-    myFile.close();
+    model_file.close();
 }
 
 void NaiveBayesClassifier::saveModel(const char* file_name) {
-    ofstream newFile;
-    newFile.open(file_name);
+    ofstream new_file;
+    new_file.open(file_name);
 
     for (vector<vector<double>> class_features : probabilities) {
         for (vector<double> row_features : class_features) {
             for (double feature_value : row_features) {
-                newFile << feature_value << endl;
+                new_file << feature_value << endl;
             }
         }
     }
 
     for (double class_prior : priors) {
-        newFile << class_prior << endl;
+        new_file << class_prior << endl;
     }
 
 }
