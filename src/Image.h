@@ -4,8 +4,6 @@
 #ifndef NAIVEBAYES_IMAGE_H
 #define NAIVEBAYES_IMAGE_H
 
-#endif //NAIVEBAYES_IMAGE_H
-
 #include <vector>
 using namespace std;
 
@@ -27,3 +25,5 @@ class Image {
         int getPredictedLabel();
         void setPredictedLabel(int class_label);
 };
+
+#endif //NAIVEBAYES_IMAGE_H

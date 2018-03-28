@@ -10,7 +10,7 @@
 
 #include "NaiveBayesClassifier.h"
 
-bool loadImageData(NaiveBayesClassifier& imageClassifier) {
+bool loadTrainingImageData(NaiveBayesClassifier& imageClassifier) {
     string user_input = "";
     bool is_new_model;
 
@@ -22,8 +22,10 @@ bool loadImageData(NaiveBayesClassifier& imageClassifier) {
         if (user_input == "read") {
             string training_images_file;
             string training_labels_file;
+
             cout << "Enter file path for training images" << endl;
             getline(cin, training_images_file);
+
             cout << "Enter file path for training labels" << endl;
             getline(cin, training_labels_file);
 
@@ -32,6 +34,7 @@ bool loadImageData(NaiveBayesClassifier& imageClassifier) {
             is_new_model = true;
         } else if (user_input == "load"){
             string saved_model_file;
+
             cout << "Enter file name of saved model" << endl;
             getline(cin, saved_model_file);
 
@@ -41,15 +44,20 @@ bool loadImageData(NaiveBayesClassifier& imageClassifier) {
         }
     }
 
+    return is_new_model;
+}
+
+void loadTestImagesData(NaiveBayesClassifier& imageClassifier) {
     string test_images_file;
     string test_labels_file;
+
     cout << "Enter the file path for the test images" << endl;
     getline(cin, test_images_file);
+
     cout << "Enter the file path for the test labels" << endl;
     getline(cin, test_labels_file);
 
     imageClassifier.setTestImages(imageClassifier.loadImages(test_images_file.c_str(), test_labels_file.c_str()));
-    return is_new_model;
 }
 
 void classifyTestData(NaiveBayesClassifier& imageClassifier, bool is_new_model) {
@@ -89,7 +97,8 @@ void saveModelData(NaiveBayesClassifier& imageClassifier) {
 int main() {
     NaiveBayesClassifier imageClassifier;
 
-    bool is_new_model = loadImageData(imageClassifier);
+    bool is_new_model = loadTrainingImageData(imageClassifier);
+    loadTestImagesData(imageClassifier);
     classifyTestData(imageClassifier, is_new_model);
     saveModelData(imageClassifier);
 

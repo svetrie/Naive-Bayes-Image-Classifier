@@ -127,13 +127,13 @@ void NaiveBayesClassifier::loadModel(const char* file_name) {
         cout << "File path not recognized" << endl;
     }
 
-    string feature_probabiltity;
+    string feature_probability;
 
     for (int i = 0; i < probabilities.size(); i++) {
         for (int j = 0; j < probabilities[0].size(); ++j) {
             for (int k = 0; k < probabilities[0][0].size(); ++k) {
-                getline(model_file, feature_probabiltity);
-                probabilities[i][j][k] = stod(feature_probabiltity);
+                getline(model_file, feature_probability);
+                probabilities[i][j][k] = stod(feature_probability);
             }
         }
     }

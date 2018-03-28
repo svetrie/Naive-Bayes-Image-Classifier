@@ -5,8 +5,6 @@
 #ifndef NAIVEBAYES_IMAGEDATA_H
 #define NAIVEBAYES_IMAGEDATA_H
 
-#endif //NAIVEBAYES_IMAGEDATA_H
-
 #include "Image.h"
 #include <vector>
 #include <string>
@@ -18,7 +16,6 @@ class NaiveBayesClassifier {
         vector<vector<vector<double>>> probabilities;
         vector<double> priors;
         vector<int> class_frequencies;
-        //vector<vector<double>> confusion_matrix;
 
     public:
         NaiveBayesClassifier();
@@ -34,14 +31,9 @@ class NaiveBayesClassifier {
         void setTrainingImages(vector<Image>);
         void setTestImages(vector<Image>);
 
-        //vector<Image>* getTrainingImages();
-        //vector<Image>* getTestImages();
-
         vector<Image> loadImages(const char* img_file_name, const char* labels_file_name);
         vector<Image> loadImageFeatures(const char *file_name);
         vector<int> loadImageLabels(const char *file_name);
-        //void loadImageFeatures(const char *file_name, vector<Image> *images);
-        //void loadImageLabels(const char *file_name, vector<Image> *images);
 
         void findClassFrequencies();
         void findPriors();
@@ -58,3 +50,5 @@ class NaiveBayesClassifier {
         void saveModel(const char* file_name);
         void loadModel(const char* file_name);
 };
+
+#endif //NAIVEBAYES_IMAGEDATA_H
