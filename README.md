@@ -1,2 +1,3 @@
-# naivebayes
-Naive Bayes Classifier 
+# Naive Bayes Image Classifier
+
+The Naive Bayes Number Classifier classifies numbers using the Naive Bayes algorithm and posterior probabilities. The program looks at a training set of numbers and makes predictions about a test set of numbers. Each number consists of a 28 x 28 square of characters stored in a text file. Numbers are written using colored pixels, represented by the '#' and '+' characters, and white pixels, represented by an empty space. The classifer examines the pixels of each number in the training set and uses the accumlation of this information to classify the numbers of the test set. This project was written in C++.
